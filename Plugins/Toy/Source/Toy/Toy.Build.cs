@@ -16,12 +16,13 @@ public class Toy : ModuleRules
 		});
 			
 		
-		PrivateDependencyModuleNames.AddRange(new string[]{
+		PrivateDependencyModuleNames.AddRange(new string[]{	// 라이브러리 새로 추가
 			"CoreUObject",
 			"Engine",
 			"Slate",
 			"SlateCore",
-			"EditorStyle"
+			"EditorStyle",
+			"Projects"
 		});
 		
 		
