@@ -2,8 +2,10 @@
 #include "Toolbar/ButtonCommand.h"
 #include "Toolbar/IconStyle.h"
 #include "DebuggerCategory/DebuggerCategory.h"
+#include "DetailPanel/MeshActor_DetailPanel.h"
 #include "LevelEditor.h"
 #include "GameplayDebugger.h"
+#include "Objects/CMeshActor.h"
 
 #define LOCTEXT_NAMESPACE "FToyModule"
 #define VIEW_UE4_ICON_RESOURCES 0
@@ -33,6 +35,12 @@ void FToyModule::StartupModule()
 		IGameplayDebugger::FOnGetCategory MakeCategoryDelegate = IGameplayDebugger::FOnGetCategory::CreateStatic(&FDebuggerCategory::MakeInstance);
 		gameplayDebugger.Get().RegisterCategory("AwesomeData", MakeCategoryDelegate, EGameplayDebuggerCategoryState::EnabledInGameAndSimulate, 5);
 		gameplayDebugger.NotifyCategoriesChanged();
+	}
+
+	// DetailPanel
+	{
+		FPropertyEditorModule& propertyEditor = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");		
+		propertyEditor.RegisterCustomClassLayout(ACMeshActor::StaticClass()->GetFName(), FOnGetDetailCustomizationInstance::CreateStatic(&FMeshActor_DetailPanel::MakeInstance));
 	}
 
 #if VIEW_UE4_ICON_RESOURCES
