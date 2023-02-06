@@ -17,7 +17,8 @@ public class Game : ModuleRules
 			"HeadMountedDisplay",
 			"NavigationSystem",
 			"AIModule",
-			"ProceduralMeshComponent"
+			"ProceduralMeshComponent",
+			"UnrealEd"
 		});
     }
 }

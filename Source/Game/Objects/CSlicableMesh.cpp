@@ -2,6 +2,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "ProceduralMeshComponent.h"
 #include "KismetProceduralMeshLibrary.h"
+#include "UObject/ConstructorHelpers.h"
 
 ACSlicableMesh::ACSlicableMesh()
 {

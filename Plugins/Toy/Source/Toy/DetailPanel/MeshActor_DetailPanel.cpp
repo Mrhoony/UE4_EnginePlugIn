@@ -6,6 +6,7 @@
 #include "Interfaces/IMainFrameModule.h"
 #include "DesktopPlatformModule.h"
 #include "Serialization/BufferArchive.h"
+#include "Misc/FileHelper.h"
 
 TSharedRef<IDetailCustomization> FMeshActor_DetailPanel::MakeInstance()
 {
@@ -102,9 +103,9 @@ FReply FMeshActor_DetailPanel::OnClicked_SaveMesh()
 	FString path;
 
 	IMainFrameModule& mainFrame = FModuleManager::LoadModuleChecked<IMainFrameModule>("MainFrame");
-	void* handle = mainFrame.GetParentWindow()->GetNativeWindow()->GetOSWindowHandle();
-	// handle == HWND
+	void* handle = mainFrame.GetParentWindow()->GetNativeWindow()->GetOSWindowHandle(); // handle == HWND
 	IDesktopPlatform* platform = FDesktopPlatformModule::Get();
+	
 	TArray<FString> fileNames;
 	platform->SaveFileDialog(handle, "Save Mesh to Binary", path, "", "Binary Files(*.bin)|*.bin", EFileDialogFlags::None, fileNames);
 	if (fileNames.Num() < 1) return FReply::Unhandled();
@@ -132,8 +133,37 @@ FReply FMeshActor_DetailPanel::OnClicked_SaveMesh()
 	ib.GetCopy(indices);
 	data.Indices.Insert((int32*)indices.GetData(), indexCount, 0);
 
+	// Save Binary File
 	FBufferArchive buffer;
 	buffer << data;
+	
+	FFileHelper::SaveArrayToFile(buffer, *fileNames[0]);
+	buffer.FlushCache();
+	buffer.Empty();
+
+	FString str;
+	str.Append(FPaths::GetCleanFilename(fileNames[0]));
+	str.Append(" Binary File Saved.");
+	GLog->Log(str);
+
+	// Save CSV File(Debug)
+	FString text;
+	for (int32 i = 0; i < data.Positions.Num(); i++)
+	{
+		text.Append(data.Positions[i].ToString() + ",");
+		text.Append(data.Normals[i].ToString() + ",");
+		text.Append(data.UVs[i].ToString() + ",");
+		text.Append(data.Colors[i].ToString() + "\n");
+	}
+
+	FString csvFileName = FPaths::GetBaseFilename(fileNames[0], false);
+	FString csvSaveName = csvFileName + ".csv";
+	FFileHelper::SaveStringToFile(text, *csvSaveName);
+	
+	str = "";
+	str.Append(FPaths::GetCleanFilename(csvSaveName));
+	str.Append(" CSV File Saved.");
+	GLog->Log(str);
 
 	return FReply::Handled();
 }

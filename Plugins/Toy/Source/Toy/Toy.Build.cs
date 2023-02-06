@@ -16,8 +16,7 @@ public class Toy : ModuleRules
 		});
 			
 		
-		PrivateDependencyModuleNames.AddRange(new string[]{	// 라이브러리 새로 추가
-			"CoreUObject",
+		PrivateDependencyModuleNames.AddRange(new string[]{	// 라이브러리 새로 추가			
 			"Engine",
 			"Slate",
 			"SlateCore",
@@ -27,7 +26,9 @@ public class Toy : ModuleRules
 			"PropertyEditor",
 			"Game",
 			"MainFrame",
-			"DesktopPlatform"
+			"DesktopPlatform",
+			"UnrealEd",
+			"CoreUObject"
 		});
 		
 		

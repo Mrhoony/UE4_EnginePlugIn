@@ -13,7 +13,12 @@ struct FBinaryData
 
 	friend FArchive& operator <<(FArchive& InArchive, FBinaryData InData)
 	{
-		return InArchive << InData.Positions;
+		return InArchive
+			<< InData.Positions
+			<< InData.Normals
+			<< InData.Colors
+			<< InData.UVs
+			<< InData.Indices;
 	}
 };
 
