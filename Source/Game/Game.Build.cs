@@ -1,3 +1,5 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
 using UnrealBuildTool;
 
 public class Game : ModuleRules
@@ -8,17 +10,6 @@ public class Game : ModuleRules
 
 		PublicIncludePaths.Add(ModuleDirectory);
 
-		PublicDependencyModuleNames.AddRange(new string[]
-		{
-			"Core",
-			"CoreUObject",
-			"Engine",
-			"InputCore",
-			"HeadMountedDisplay",
-			"NavigationSystem",
-			"AIModule",
-			"ProceduralMeshComponent",
-			"UnrealEd"
-		});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "NavigationSystem", "AIModule" , "ProceduralMeshComponent" });
     }
 }

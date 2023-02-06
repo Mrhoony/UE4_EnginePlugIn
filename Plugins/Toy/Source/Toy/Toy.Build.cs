@@ -16,19 +16,19 @@ public class Toy : ModuleRules
 		});
 			
 		
-		PrivateDependencyModuleNames.AddRange(new string[]{	// 라이브러리 새로 추가			
+		PrivateDependencyModuleNames.AddRange(new string[]{
+			"CoreUObject",
 			"Engine",
 			"Slate",
 			"SlateCore",
 			"EditorStyle",
+			"Game",
 			"Projects",
 			"GameplayDebugger",
 			"PropertyEditor",
-			"Game",
 			"MainFrame",
 			"DesktopPlatform",
-			"UnrealEd",
-			"CoreUObject"
+			"UnrealEd"
 		});
 		
 		

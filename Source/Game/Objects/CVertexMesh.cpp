@@ -11,7 +11,7 @@ ACVertexMesh::ACVertexMesh()
 
 	FVector v = FVector(0.5f);
 
-	// Front
+	//Front
 	Positions.Add(FVector(-0.5f, -0.5f, -0.5f)); UVs.Add(FVector2D(0, 1));
 	Positions.Add(FVector(-0.5f, -0.5f, +0.5f)); UVs.Add(FVector2D(0, 0));
 	Positions.Add(FVector(-0.5f, +0.5f, -0.5f)); UVs.Add(FVector2D(1, 1));
@@ -22,7 +22,8 @@ ACVertexMesh::ACVertexMesh()
 		Normals.Add(FVector(-1, 0, 0));
 		Colors.Add(FColor::Red);
 	}
-	AddIndices(0); // AddIndices(Indices.Num());
+	AddIndices(0);
+
 	//Back
 	Positions.Add(FVector(+v.X, +v.Y, -v.Z)); UVs.Add(FVector2D(0, 1));
 	Positions.Add(FVector(+v.X, +v.Y, +v.Z)); UVs.Add(FVector2D(0, 0));
@@ -91,6 +92,7 @@ ACVertexMesh::ACVertexMesh()
 		Colors.Add(FColor::Yellow);
 	}
 	AddIndices(20);
+	
 
 	ProcMesh->CreateMeshSection(0, Positions, Indices, Normals, UVs, Colors, TArray<FProcMeshTangent>(), true);
 	ProcMesh->SetRelativeScale3D(FVector(100));
@@ -99,12 +101,14 @@ ACVertexMesh::ACVertexMesh()
 void ACVertexMesh::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
 
 void ACVertexMesh::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
 	for (int32 i = 0; i < Colors.Num() / 4; i++)
 	{
 		FColor color = FColor::MakeRandomColor();
@@ -114,14 +118,8 @@ void ACVertexMesh::Tick(float DeltaTime)
 		Colors[i * 4 + 1] = color;
 		Colors[i * 4 + 2] = color;
 		Colors[i * 4 + 3] = color;
-
-		//Positions[i * 4 + 0] += FVector(0, -0.5, -0.5) * DeltaTime;
-		//Positions[i * 4 + 1] += FVector(0, -0.5, +0.5) * DeltaTime;
-		//Positions[i * 4 + 2] += FVector(0, +0.5, -0.5) * DeltaTime;
-		//Positions[i * 4 + 3] += FVector(0, +0.5, +0.5) * DeltaTime;
 	}
 
-	//Positions[0] += FVector(0, 0, 1) * 100.f * DeltaTime;
 	ProcMesh->UpdateMeshSection(0, Positions, Normals, UVs, Colors, TArray<FProcMeshTangent>());
 }
 
@@ -130,8 +128,9 @@ void ACVertexMesh::AddIndices(int32 InStart)
 	Indices.Add(InStart + 2);
 	Indices.Add(InStart + 1);
 	Indices.Add(InStart + 0);
-	
+
 	Indices.Add(InStart + 3);
 	Indices.Add(InStart + 1);
 	Indices.Add(InStart + 2);
 }
+

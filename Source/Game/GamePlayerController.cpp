@@ -29,7 +29,8 @@ void AGamePlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AGamePlayerController::OnSetDestinationPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &AGamePlayerController::OnSetDestinationReleased);
-	InputComponent->BindAction("Slice", IE_Released, this, &AGamePlayerController::OnSlice);
+
+	InputComponent->BindAction("Slice", IE_Pressed, this, &AGamePlayerController::OnSlice);
 }
 
 void AGamePlayerController::MoveToMouseCursor()
@@ -67,19 +68,20 @@ void AGamePlayerController::OnSetDestinationReleased()
 
 void AGamePlayerController::OnSlice()
 {
+	//LineTrace
 	FVector start = GetPawn()->GetActorLocation();
 	FVector end = FVector(CursorLocation.X, CursorLocation.Y, start.Z);
 
 	TArray<AActor*> ignores;
 	ignores.Add(GetPawn());
-	
+
 	FHitResult hitResult;
 	UKismetSystemLibrary::LineTraceSingle
 	(
 		GetWorld(),
 		start,
 		end,
-		UEngineTypes::ConvertToTraceType(ECollisionChannel::ECC_Visibility),
+		UEngineTypes::ConvertToTraceType(ECC_Visibility),
 		false,
 		ignores,
 		EDrawDebugTrace::ForDuration,
@@ -89,15 +91,14 @@ void AGamePlayerController::OnSlice()
 		FLinearColor::Red,
 		1.f
 	);
-
 	if (hitResult.IsValidBlockingHit() == false) return;
 
-	// Slice
+	//Slice
 	UProceduralMeshComponent* otherProcMesh = Cast<UProceduralMeshComponent>(hitResult.Component);
 	if (otherProcMesh == nullptr) return;
 
-	UMaterialInstanceConstant* material = Cast<UMaterialInstanceConstant>(StaticLoadObject(UMaterialInstanceConstant::StaticClass(), nullptr, TEXT("MaterialInstanceConstant'/Game/Materials/M_Plane_Inst.M_Plane_Inst'")));
-
+	UMaterialInstanceConstant* material 
+		= Cast<UMaterialInstanceConstant>(StaticLoadObject(UMaterialInstanceConstant::StaticClass(), nullptr, TEXT("MaterialInstanceConstant'/Game/Materials/MAT_Plane_Inst.MAT_Plane_Inst'")));
 
 	UProceduralMeshComponent* outProcMesh = nullptr;
 
@@ -121,3 +122,4 @@ void AGamePlayerController::OnSlice()
 	outProcMesh->SetSimulatePhysics(true);
 	outProcMesh->AddImpulse(direction * 600, NAME_None, true);
 }
+

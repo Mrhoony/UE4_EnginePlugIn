@@ -15,21 +15,21 @@ TSharedRef<IDetailCustomization> FMeshActor_DetailPanel::MakeInstance()
 
 void FMeshActor_DetailPanel::CustomizeDetails(IDetailLayoutBuilder& DetailBuilder)
 {
-	IDetailCategoryBuilder& category = DetailBuilder.EditCategory("Awesome Category");
+	IDetailCategoryBuilder& cateory = DetailBuilder.EditCategory("Awesome Category");
 
-	// Shuffle Material
-	category.AddCustomRow(FText::FromString("Shuffle"))
-		.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(FText::FromString("Material Instance"))
-		]
+	//Shuffle Material
+	cateory.AddCustomRow(FText::FromString("Shuffle"))
+	.NameContent()
+	[
+		SNew(STextBlock)
+		.Text(FText::FromString("Material Instance"))
+	]
 	.ValueContent()
+	.VAlign(VAlign_Center)
+	.MaxDesiredWidth(250)
+	[
+		SNew(SButton)
 		.VAlign(VAlign_Center)
-		.MaxDesiredWidth(250)
-		[
-			SNew(SButton)
-			.VAlign(VAlign_Center)
 		.HAlign(HAlign_Fill)
 		.OnClicked(this, &FMeshActor_DetailPanel::OnClicked_ShuffleMaterial)
 		.Content()
@@ -39,35 +39,36 @@ void FMeshActor_DetailPanel::CustomizeDetails(IDetailLayoutBuilder& DetailBuilde
 		]
 	];
 
-	// Save Mesh
-	category.AddCustomRow(FText::FromString("Save"))
-		.NameContent()
-		[
-			SNew(STextBlock)
-			.Text(FText::FromString("Save Mesh"))
-		]
-	.ValueContent()
-		.VAlign(VAlign_Center)
-		.MaxDesiredWidth(250)
+	//Save Mesh
+	cateory.AddCustomRow(FText::FromString("Save"))
+	.NameContent()
 	[
-			SNew(SButton)
-			.VAlign(VAlign_Center)
+		SNew(STextBlock)
+		.Text(FText::FromString("Save Mesh"))
+	]
+	.ValueContent()
+	.VAlign(VAlign_Center)
+	.MaxDesiredWidth(250)
+	[
+		SNew(SButton)
+		.VAlign(VAlign_Center)
 		.HAlign(HAlign_Fill)
 		.OnClicked(this, &FMeshActor_DetailPanel::OnClicked_SaveMesh)
 		.Content()
 		[
 			SNew(STextBlock)
-			.Text(FText::FromString("Save to Binary File"))
+			.Text(FText::FromString("Save To Binary File"))
 		]
 	];
 
 	DetailBuilder.GetObjectsBeingCustomized(Objects);
+
 }
 
 FReply FMeshActor_DetailPanel::OnClicked_ShuffleMaterial()
 {
 	ACMeshActor* actor = Cast<ACMeshActor>(Objects[0]);
-	if (actor == nullptr) return FReply::Unhandled();;
+	if (actor == nullptr) return FReply::Unhandled();
 	actor->ShuffleMaterial();
 
 	return FReply::Handled();
@@ -75,20 +76,21 @@ FReply FMeshActor_DetailPanel::OnClicked_ShuffleMaterial()
 
 FReply FMeshActor_DetailPanel::OnClicked_SaveMesh()
 {
+	//Get StaticMesh Asset
 	ACMeshActor* actor = Cast<ACMeshActor>(Objects[0]);
 	UStaticMeshComponent* comp = Cast<UStaticMeshComponent>(actor->GetComponentByClass(UStaticMeshComponent::StaticClass()));
 	UStaticMesh* meshAsset = comp->GetStaticMesh();
 	if (meshAsset == nullptr) return FReply::Unhandled();
 
-	// Get LOD Data
+	//Get LOD Data
 	FStaticMeshRenderData* renderData = meshAsset->RenderData.Get();
 	FStaticMeshLODResources& lod = renderData->LODResources[0];
-	
-	// Get Vertex Data
-	FPositionVertexBuffer& vb = lod.VertexBuffers.PositionVertexBuffer; // position
-	FColorVertexBuffer& colorVb = lod.VertexBuffers.ColorVertexBuffer; // color
-	FStaticMeshVertexBuffer& meshVb = lod.VertexBuffers.StaticMeshVertexBuffer; // uv, normal, tangent
-	FRawStaticIndexBuffer& ib = lod.IndexBuffer; // index
+
+	//Get Vertex Data
+	FPositionVertexBuffer& vb = lod.VertexBuffers.PositionVertexBuffer; //position
+	FStaticMeshVertexBuffer& meshVb = lod.VertexBuffers.StaticMeshVertexBuffer; //uv, normal, tangent
+	FColorVertexBuffer& colorVb = lod.VertexBuffers.ColorVertexBuffer; //color
+	FRawStaticIndexBuffer& ib = lod.IndexBuffer; //index
 
 	if (vb.GetNumVertices() < 1) return FReply::Unhandled();
 	if (ib.GetNumIndices() < 1) return FReply::Unhandled();
@@ -99,18 +101,18 @@ FReply FMeshActor_DetailPanel::OnClicked_SaveMesh()
 	GLog->Logf(TEXT("Vertex Count : %d"), vertexCount);
 	GLog->Logf(TEXT("Index Count : %d"), indexCount);
 
-	// Save File Dialog
+	//Save File Dialog
 	FString path;
 
 	IMainFrameModule& mainFrame = FModuleManager::LoadModuleChecked<IMainFrameModule>("MainFrame");
-	void* handle = mainFrame.GetParentWindow()->GetNativeWindow()->GetOSWindowHandle(); // handle == HWND
+	void* handle = mainFrame.GetParentWindow()->GetNativeWindow()->GetOSWindowHandle();
 	IDesktopPlatform* platform = FDesktopPlatformModule::Get();
-	
+
 	TArray<FString> fileNames;
-	platform->SaveFileDialog(handle, "Save Mesh to Binary", path, "", "Binary Files(*.bin)|*.bin", EFileDialogFlags::None, fileNames);
+	platform->SaveFileDialog(handle, "Save Mesh to Binanry", path, "", "Binary Files(*.bin)|*.bin", EFileDialogFlags::None, fileNames);
 	if (fileNames.Num() < 1) return FReply::Unhandled();
 
-	// Save Binary File
+	//Save Binary Data
 	FBinaryData data;
 
 	TArray<FColor> colors;
@@ -133,7 +135,7 @@ FReply FMeshActor_DetailPanel::OnClicked_SaveMesh()
 	ib.GetCopy(indices);
 	data.Indices.Insert((int32*)indices.GetData(), indexCount, 0);
 
-	// Save Binary File
+	//Save Binary File
 	FBufferArchive buffer;
 	buffer << data;
 	
@@ -146,7 +148,7 @@ FReply FMeshActor_DetailPanel::OnClicked_SaveMesh()
 	str.Append(" Binary File Saved.");
 	GLog->Log(str);
 
-	// Save CSV File(Debug)
+	//Save CSV File(Debug)
 	FString text;
 	for (int32 i = 0; i < data.Positions.Num(); i++)
 	{
@@ -159,7 +161,7 @@ FReply FMeshActor_DetailPanel::OnClicked_SaveMesh()
 	FString csvFileName = FPaths::GetBaseFilename(fileNames[0], false);
 	FString csvSaveName = csvFileName + ".csv";
 	FFileHelper::SaveStringToFile(text, *csvSaveName);
-	
+
 	str = "";
 	str.Append(FPaths::GetCleanFilename(csvSaveName));
 	str.Append(" CSV File Saved.");

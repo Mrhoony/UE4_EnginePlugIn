@@ -21,6 +21,7 @@ public:
 private:
 	void AddIndices(int32 InStart);
 
+
 private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UProceduralMeshComponent* ProcMesh;
@@ -32,5 +33,4 @@ private:
 	TArray<FVector2D> UVs;
 
 	TArray<int32> Indices;
-
 };

@@ -1,9 +1,7 @@
 #include "CMeshActor.h"
-
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstanceConstant.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "UObject/ConstructorHelpers.h"
 
 ACMeshActor::ACMeshActor()
 {
@@ -11,29 +9,30 @@ ACMeshActor::ACMeshActor()
 	RootComponent = Mesh;
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh> meshAsset(TEXT("StaticMesh'/Engine/EditorMeshes/Camera/SM_CineCam.SM_CineCam'"));
-	if(meshAsset.Succeeded())
+	if (meshAsset.Succeeded())
 		Mesh->SetStaticMesh(meshAsset.Object);
 
-	ConstructorHelpers::FObjectFinder<UMaterialInstanceConstant> materialAsset(TEXT("MaterialInstanceConstant'/Game/Materials/M_Write.M_Write'"));
+	ConstructorHelpers::FObjectFinder<UMaterialInstanceConstant> materialAsset(TEXT("MaterialInstanceConstant'/Game/Materials/MAT_Write.MAT_Write'"));
 	if (materialAsset.Succeeded())
-	{
 		Material = materialAsset.Object;
-		Mesh->SetMaterial(0, Material);
-	}		
+
+	Mesh->SetMaterial(0, Material);
 }
 
 void ACMeshActor::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
 
 #if WITH_EDITOR
 void ACMeshActor::ShuffleMaterial()
 {
-	int index = UKismetMathLibrary::RandomIntegerInRange(0, (int32)EMaterialType::Max - 1);
-	
+	int32 index = UKismetMathLibrary::RandomIntegerInRange(0, (int32)EMaterialType::Max - 1);
+
 	for (const FTextureParameterValue& value : Material->TextureParameterValues)
 	{
+		//Texture Param
 		if (value.ParameterInfo.Name.Compare("BaseMap") == 0)
 			Material->SetTextureParameterValueEditorOnly(value.ParameterInfo, MaterialParameters[index].BaseMap);
 
@@ -43,7 +42,8 @@ void ACMeshActor::ShuffleMaterial()
 		if (value.ParameterInfo.Name.Compare("NormalMap") == 0)
 			Material->SetTextureParameterValueEditorOnly(value.ParameterInfo, MaterialParameters[index].NormalMap);
 	}
-
+	
+	//Scalar Param
 	for (const FScalarParameterValue& value : Material->ScalarParameterValues)
 	{
 		if (value.ParameterInfo.Name.Compare("Metallic") == 0)

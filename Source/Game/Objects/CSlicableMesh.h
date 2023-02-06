@@ -21,7 +21,7 @@ private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class USceneComponent* Scene;
 
-		UPROPERTY(VisibleDefaultsOnly)
+	UPROPERTY(VisibleDefaultsOnly)
 		class UStaticMeshComponent* StaticMesh;
 
 	UPROPERTY(VisibleDefaultsOnly)

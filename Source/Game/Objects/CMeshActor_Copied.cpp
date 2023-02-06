@@ -16,13 +16,13 @@ void ACMeshActor_Copied::OnConstruction(const FTransform& Transform)
 
 	ProcMesh->CreateMeshSection(0, Positions, Indices, Normals, UVs, Colors, TArray<FProcMeshTangent>(), true);
 
-	Material = Cast<UMaterialInstanceConstant>(StaticLoadObject(UMaterialInstanceConstant::StaticClass(), nullptr, TEXT("MaterialInstanceConstant'/Game/Materials/M_Write.M_Write'")));
+	Material = Cast<UMaterialInstanceConstant>(StaticLoadObject(UMaterialInstanceConstant::StaticClass(), nullptr, TEXT("MaterialInstanceConstant'/Game/Materials/MAT_Write.MAT_Write'")));
 	ProcMesh->SetMaterial(0, Material);
 }
 
 void ACMeshActor_Copied::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
-
 

@@ -65,7 +65,7 @@ void AGameCharacter::Tick(float DeltaSeconds)
 			CursorToWorld->SetWorldRotation(CursorR);
 
 			AGamePlayerController* pc = Cast<AGamePlayerController>(PC);
-			if (pc != nullptr)
+			if (!!pc)
 				pc->SetCursorLocation(TraceHitResult.Location);
 		}
 	}

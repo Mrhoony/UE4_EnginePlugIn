@@ -8,13 +8,14 @@
 #include "Objects/CMeshActor.h"
 
 #define LOCTEXT_NAMESPACE "FToyModule"
-#define VIEW_UE4_ICON_RESOURCES 0
+
+#define VIEW_UE4_RESOURCES 0
 
 void FToyModule::StartupModule()
 {
-	// ToolBar
+	//ToolBar
 	{
-		FIconStyle::Get(); // Create를 위한 호출
+		FIconStyle::Get();
 		FButtonCommand::Register();
 
 		Extender = MakeShareable(new FExtender());
@@ -29,21 +30,25 @@ void FToyModule::StartupModule()
 		levelEditor.GetToolBarExtensibilityManager()->AddExtender(Extender);
 	}
 
-	// DebuggerCategory
+	//DebuggerCategory
 	{
-		IGameplayDebugger& gameplayDebugger = IGameplayDebugger::Get();
-		IGameplayDebugger::FOnGetCategory MakeCategoryDelegate = IGameplayDebugger::FOnGetCategory::CreateStatic(&FDebuggerCategory::MakeInstance);
-		gameplayDebugger.Get().RegisterCategory("AwesomeData", MakeCategoryDelegate, EGameplayDebuggerCategoryState::EnabledInGameAndSimulate, 5);
-		gameplayDebugger.NotifyCategoriesChanged();
+		IGameplayDebugger& gameplayDeubgger = IGameplayDebugger::Get();
+		IGameplayDebugger::FOnGetCategory makeCategoryDelegate = IGameplayDebugger::FOnGetCategory::CreateStatic(&FDebuggerCategory::MakeInstance);
+		gameplayDeubgger.Get().RegisterCategory("AwesomeData", makeCategoryDelegate, EGameplayDebuggerCategoryState::EnabledInGameAndSimulate, 5);
+		gameplayDeubgger.NotifyCategoriesChanged();
 	}
 
-	// DetailPanel
+	//DetailPanel
 	{
-		FPropertyEditorModule& propertyEditor = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");		
-		propertyEditor.RegisterCustomClassLayout(ACMeshActor::StaticClass()->GetFName(), FOnGetDetailCustomizationInstance::CreateStatic(&FMeshActor_DetailPanel::MakeInstance));
+		FPropertyEditorModule& propertyEditor =  FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
+		propertyEditor.RegisterCustomClassLayout
+		(
+			ACMeshActor::StaticClass()->GetFName(),
+			FOnGetDetailCustomizationInstance::CreateStatic(&FMeshActor_DetailPanel::MakeInstance)
+		);
 	}
 
-#if VIEW_UE4_ICON_RESOURCES
+#if VIEW_UE4_RESOURCES
 	TArray<const FSlateBrush*> brushes;
 	FEditorStyle::GetResources(brushes);
 	for (const FSlateBrush* brush : brushes)
@@ -55,7 +60,7 @@ void FToyModule::ShutdownModule()
 {
 	FIconStyle::Shutdown();
 
-	if(IGameplayDebugger::IsAvailable())
+	if (IGameplayDebugger::IsAvailable())
 		IGameplayDebugger::Get().UnregisterCategory("AwesomeData");
 }
 
@@ -71,7 +76,6 @@ void FToyModule::AddToolBar(class FToolBarBuilder& InBuilder)
 		FIconStyle::Get()->ToolBar_Icon
 	);
 
-	//버튼의 정의(버튼의 디자인, 버튼 눌렀을 때 액션..)
 }
 
 void FToyModule::AddToolBar2(class FToolBarBuilder& InBuilder)
@@ -85,7 +89,6 @@ void FToyModule::AddToolBar2(class FToolBarBuilder& InBuilder)
 		FIconStyle::Get()->ToolBar_Icon2
 	);
 
-	//버튼의 정의(버튼의 디자인, 버튼 눌렀을 때 액션..)
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -11,7 +11,7 @@ struct FBinaryData
 	TArray<FVector2D> UVs;
 	TArray<int32> Indices;
 
-	friend FArchive& operator <<(FArchive& InArchive, FBinaryData InData)
+	friend FArchive& operator <<(FArchive& InArchive, FBinaryData& InData)
 	{
 		return InArchive
 			<< InData.Positions
@@ -28,11 +28,12 @@ public:
 	static TSharedRef<IDetailCustomization> MakeInstance();
 
 public:
-	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override; // Slate UI SYNTAX 사용 예정
+	virtual void CustomizeDetails(IDetailLayoutBuilder& DetailBuilder) override;
 
 private:
 	FReply OnClicked_ShuffleMaterial();
 	FReply OnClicked_SaveMesh();
 
+private:
 	TArray<TWeakObjectPtr<UObject>> Objects;
 };

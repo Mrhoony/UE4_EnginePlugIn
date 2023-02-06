@@ -12,20 +12,16 @@ class GAME_API ACMeshActor_Copied : public AActor
 public:	
 	ACMeshActor_Copied();
 
-public:
 	virtual void OnConstruction(const FTransform& Transform) override;
+
+	FORCEINLINE void SetPositions(const TArray<FVector>& InPositions) { Positions = InPositions; }
+	FORCEINLINE void SetNormals(const TArray<FVector>& InNormals) { Normals = InNormals; }
+	FORCEINLINE void SetColors(const TArray<FColor>& InColors) { Colors = InColors;	}
+	FORCEINLINE void SetUVs(const TArray<FVector2D>& InUVs) { UVs = InUVs; }
+	FORCEINLINE void SetIndices(const TArray<int32>& InIndices) { Indices = InIndices; }
 
 protected:
 	virtual void BeginPlay() override;
-
-	
-
-public:
-	FORCEINLINE void SetPositions(const TArray<FVector>& InPositions) { Positions = InPositions; }
-	FORCEINLINE void SetNormals(const TArray<FVector>& InNormals) { Normals = InNormals; }
-	FORCEINLINE void SetColors(const TArray<FColor>& InColors) { Colors = InColors; }
-	FORCEINLINE void SetUVs (const TArray<FVector2D>& InUVs) { UVs = InUVs; }
-	FORCEINLINE void SetIndices(const TArray<int32>& InIndices) { Indices = InIndices; }
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -33,6 +29,7 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly)
 		class UMaterialInstanceConstant* Material;
+
 
 private:
 	TArray<FVector> Positions;

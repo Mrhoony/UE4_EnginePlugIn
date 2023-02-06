@@ -16,12 +16,12 @@ struct FMaterialParameterData
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere)		class UTexture* BaseMap;
-	UPROPERTY(EditAnywhere)		class UTexture* RoughnessMap;
-	UPROPERTY(EditAnywhere)		class UTexture* NormalMap;
-	UPROPERTY(EditAnywhere)		float Metallic;
-	UPROPERTY(EditAnywhere)		float Roughness_Min;
-	UPROPERTY(EditAnywhere)		float Roughness_Max;
+	UPROPERTY(EditAnywhere)	class UTexture* BaseMap;
+	UPROPERTY(EditAnywhere)	class UTexture* RoughnessMap;
+	UPROPERTY(EditAnywhere)	class UTexture* NormalMap;
+	UPROPERTY(EditAnywhere) float Metallic;
+	UPROPERTY(EditAnywhere) float Roughness_Min;
+	UPROPERTY(EditAnywhere) float Roughness_Max;
 };
 
 UCLASS()

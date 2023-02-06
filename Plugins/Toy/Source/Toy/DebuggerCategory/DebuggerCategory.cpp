@@ -17,23 +17,25 @@ void FDebuggerCategory::CollectData(APlayerController* OwnerPC, AActor* DebugAct
 	FGameplayDebuggerCategory::CollectData(OwnerPC, DebugActor);
 
 	ACharacter* player = Cast<ACharacter>(OwnerPC->GetPawn());
-	// PlayerPawn
+	//PlayerPawn
 	{
 		PlayerPawnData.Name = player->GetName();
 		PlayerPawnData.Location = player->GetActorLocation();
 		PlayerPawnData.Forward = player->GetActorForwardVector();
 	}
-	// ForwardActor
+
+	//ForwardActor
 	{
 		FHitResult hitResult;
 		FVector start = player->GetActorLocation();
 		FVector end = start + player->GetActorForwardVector() * 1e+4f;
-		FCollisionQueryParams params;
-		params.AddIgnoredActor(player);
 		
-		player->GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECollisionChannel::ECC_Visibility, params);
+		FCollisionQueryParams parmas;
+		parmas.AddIgnoredActor(player);
 
-		if (hitResult.bBlockingHit == true)
+		player->GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECollisionChannel::ECC_Visibility, parmas);
+
+		if (hitResult.bBlockingHit)
 		{
 			ForwardActorData.Name = hitResult.GetActor()->GetName();
 			ForwardActorData.Location = hitResult.GetActor()->GetActorLocation();
@@ -45,10 +47,12 @@ void FDebuggerCategory::CollectData(APlayerController* OwnerPC, AActor* DebugAct
 			ForwardActorData.Location = FVector::ZeroVector;
 			ForwardActorData.Forward = FVector::ZeroVector;
 		}
+		
 	}
-	// DebuggerActor
+
+	//DebuggerActor
 	{
-		if (DebugActor != nullptr)
+		if (!!DebugActor)
 		{
 			DebuggerActorData.Name = DebugActor->GetName();
 			DebuggerActorData.Location = DebugActor->GetActorLocation();
@@ -56,9 +60,9 @@ void FDebuggerCategory::CollectData(APlayerController* OwnerPC, AActor* DebugAct
 		}
 		else
 		{
-			ForwardActorData.Name = "";
-			ForwardActorData.Location = FVector::ZeroVector;
-			ForwardActorData.Forward = FVector::ZeroVector;
+			DebuggerActorData.Name = "";
+			DebuggerActorData.Location = FVector::ZeroVector;
+			DebuggerActorData.Forward = FVector::ZeroVector;
 		}
 	}
 }
@@ -71,19 +75,19 @@ void FDebuggerCategory::DrawData(APlayerController* OwnerPC, FGameplayDebuggerCa
 	item.BlendMode = ESimpleElementBlendMode::SE_BLEND_AlphaBlend;
 	CanvasContext.DrawItem(item, CanvasContext.CursorX, CanvasContext.CursorY);
 
-	CanvasContext.Printf(FColor::Green, L"  -- Player Pawn --  ");
+	CanvasContext.Printf(FColor::Green, L"  -- Player Pawn -- ");
 	CanvasContext.Printf(FColor::White, L"Name : %s", *PlayerPawnData.Name);
 	CanvasContext.Printf(FColor::White, L"Location : %s", *PlayerPawnData.Location.ToString());
 	CanvasContext.Printf(FColor::White, L"Forward : %s", *PlayerPawnData.Forward.ToString());
 	CanvasContext.Printf(FColor::White, L"");
 
-	CanvasContext.Printf(FColor::Green, L"  -- Forward Actor --  ");
+	CanvasContext.Printf(FColor::Green, L"  -- Forward Actor -- ");
 	CanvasContext.Printf(FColor::White, L"Name : %s", *ForwardActorData.Name);
 	CanvasContext.Printf(FColor::White, L"Location : %s", *ForwardActorData.Location.ToString());
 	CanvasContext.Printf(FColor::White, L"Forward : %s", *ForwardActorData.Forward.ToString());
 	CanvasContext.Printf(FColor::White, L"");
 
-	CanvasContext.Printf(FColor::Green, L"  -- Debugger Actor --  ");
+	CanvasContext.Printf(FColor::Green, L"  -- Debugger Actor -- ");
 	CanvasContext.Printf(FColor::White, L"Name : %s", *DebuggerActorData.Name);
 	CanvasContext.Printf(FColor::White, L"Location : %s", *DebuggerActorData.Location.ToString());
 	CanvasContext.Printf(FColor::White, L"Forward : %s", *DebuggerActorData.Forward.ToString());

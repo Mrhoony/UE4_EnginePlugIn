@@ -8,7 +8,7 @@ TSharedPtr<FIconStyle> FIconStyle::Instance = nullptr;
 TSharedPtr<FIconStyle> FIconStyle::Get()
 {
 	if (Instance == nullptr)
-		Instance = MakeShareable(new FIconStyle);
+		Instance = MakeShareable(new FIconStyle());
 
 	return Instance;
 }
@@ -24,11 +24,11 @@ FIconStyle::FIconStyle()
 	StyleSet = MakeShareable(new FSlateStyleSet(StyleSetName));
 
 	FString path = IPluginManager::Get().FindPlugin("Toy")->GetBaseDir();
-	path /= "Resources";
+	path /=  "Resources";
 	StyleSet->SetContentRoot(path);
-	
-	RegisterIcon("ToolbarIcon", path/"Icon.png", FVector2D(48), ToolBar_Icon);
-	RegisterIcon("ToolbarIcon2", path/"Icon2.png", FVector2D(48), ToolBar_Icon2);
+
+	RegisterIcon("ToolBarIcon", path / "Icon.png", FVector2D(48), ToolBar_Icon);
+	RegisterIcon("ToolBarIcon2", path / "Icon2.png", FVector2D(48), ToolBar_Icon2);
 
 	FSlateStyleRegistry::RegisterSlateStyle(*StyleSet.Get());
 }
@@ -36,14 +36,17 @@ FIconStyle::FIconStyle()
 void FIconStyle::RegisterIcon(const FString& InName, const FString& InPath, const FVector2D& InSize, FSlateIcon& OutIcon)
 {
 	FSlateImageBrush* brush = new FSlateImageBrush(InPath, InSize);
+
 	FString name = StyleSetName.ToString() + "." + InName;
 	StyleSet->Set(FName(name), brush);
+
 	OutIcon = FSlateIcon(StyleSetName, FName(name));
 }
 
 FIconStyle::~FIconStyle()
 {
 	FSlateStyleRegistry::UnRegisterSlateStyle(StyleSetName);
+
 	if (StyleSet.IsValid())
 		StyleSet.Reset();
 }

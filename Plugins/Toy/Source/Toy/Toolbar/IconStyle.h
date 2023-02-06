@@ -19,7 +19,7 @@ private:
 	void RegisterIcon(const FString& InName, const FString& InPath, const FVector2D& InSize, FSlateIcon& OutIcon);
 
 private:
-	const FName StyleSetName = "ToyStyle"; // ToyStyle.Icon1, Icon2...
+	const FName StyleSetName = "ToyStyle";
 	TSharedPtr<class FSlateStyleSet> StyleSet;
 
 public:

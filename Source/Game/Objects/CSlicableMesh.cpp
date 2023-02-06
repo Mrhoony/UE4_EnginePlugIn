@@ -2,7 +2,6 @@
 #include "Components/StaticMeshComponent.h"
 #include "ProceduralMeshComponent.h"
 #include "KismetProceduralMeshLibrary.h"
-#include "UObject/ConstructorHelpers.h"
 
 ACSlicableMesh::ACSlicableMesh()
 {
@@ -34,4 +33,6 @@ void ACSlicableMesh::OnConstruction(const FTransform& Transform)
 void ACSlicableMesh::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
+

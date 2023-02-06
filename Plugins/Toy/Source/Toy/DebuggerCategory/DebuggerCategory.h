@@ -17,11 +17,11 @@ public:
 	~FDebuggerCategory();
 
 public:
-	static TSharedRef<FGameplayDebuggerCategory> MakeInstance();
-
-public:
 	virtual void CollectData(APlayerController* OwnerPC, AActor* DebugActor) override;
 	virtual void DrawData(APlayerController* OwnerPC, FGameplayDebuggerCanvasContext& CanvasContext) override;
+
+public:
+	static TSharedRef<FGameplayDebuggerCategory> MakeInstance();
 
 private:
 	FCollectionData PlayerPawnData;

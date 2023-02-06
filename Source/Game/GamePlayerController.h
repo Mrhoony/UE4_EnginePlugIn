@@ -12,7 +12,7 @@ class AGamePlayerController : public APlayerController
 public:
 	AGamePlayerController();
 
-	FORCEINLINE void SetCursorLocation(const FVector& InLocation) { CursorLocation = InLocation; };
+	FORCEINLINE void SetCursorLocation(const FVector& InLocation) { CursorLocation = InLocation; }
 
 protected:
 	uint32 bMoveToMouseCursor : 1;
@@ -32,3 +32,5 @@ protected:
 private:
 	FVector CursorLocation;
 };
+
+
