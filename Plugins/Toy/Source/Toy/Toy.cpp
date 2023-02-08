@@ -7,6 +7,9 @@
 #include "LevelEditor.h"
 #include "GameplayDebugger.h"
 #include "Objects/CMeshActor.h"
+#include "AssetToolsModule.h"
+#include "AssetTools/CAssetAction.h"
+#include "IAssetTypeActions.h"
 
 #define LOCTEXT_NAMESPACE "FToyModule"
 
@@ -14,7 +17,7 @@
 
 void FToyModule::StartupModule()
 {
-	//ToolBar
+	// ToolBar
 	{
 		FIconStyle::Get();
 		FButtonCommand::Register();
@@ -31,7 +34,7 @@ void FToyModule::StartupModule()
 		levelEditor.GetToolBarExtensibilityManager()->AddExtender(Extender);
 	}
 
-	//DebuggerCategory
+	// DebuggerCategory
 	{
 		IGameplayDebugger& gameplayDeubgger = IGameplayDebugger::Get();
 		IGameplayDebugger::FOnGetCategory makeCategoryDelegate = IGameplayDebugger::FOnGetCategory::CreateStatic(&FDebuggerCategory::MakeInstance);
@@ -39,7 +42,7 @@ void FToyModule::StartupModule()
 		gameplayDeubgger.NotifyCategoriesChanged();
 	}
 
-	//DetailPanel
+	// DetailPanel
 	{
 		FPropertyEditorModule& propertyEditor =  FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
 		propertyEditor.RegisterCustomClassLayout
@@ -47,6 +50,15 @@ void FToyModule::StartupModule()
 			ACMeshActor::StaticClass()->GetFName(),
 			FOnGetDetailCustomizationInstance::CreateStatic(&FMeshActor_DetailPanel::MakeInstance)
 		);
+	}
+
+	// AssetTools
+	{
+		IAssetTools& assetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>("AssetTools").Get();
+		//EAssetTypeCategories::Type category = EAssetTypeCategories::Misc;
+		EAssetTypeCategories::Type category = assetTools.RegisterAdvancedAssetCategory(NAME_None, FText::FromString("Awesome Category"));
+		Actions = MakeShareable(new CAssetAction(category));
+		assetTools.RegisterAssetTypeActions(Actions.ToSharedRef());
 	}
 
 #if VIEW_UE4_RESOURCES

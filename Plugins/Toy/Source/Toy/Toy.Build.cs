@@ -8,13 +8,13 @@ public class Toy : ModuleRules
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
-		PrivateIncludePaths.Add(ModuleDirectory);
+		//PrivateIncludePaths.Add(ModuleDirectory);
+		PublicIncludePaths.Add(ModuleDirectory); // 프로젝트 내 다른 모듈들에서도 접근이 허용됨
 			
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
 			"Core",
 		});
-			
 		
 		PrivateDependencyModuleNames.AddRange(new string[]{
 			"CoreUObject",
@@ -29,9 +29,9 @@ public class Toy : ModuleRules
 			"MainFrame",
 			"DesktopPlatform",
 			"UnrealEd",
-			"AdvancedPreviewScene"
+			"AdvancedPreviewScene",
+			"InputCore",
+			"AssetTools"
 		});
-		
-		
 	}
 }

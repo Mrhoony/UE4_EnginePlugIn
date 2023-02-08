@@ -23,10 +23,14 @@ private:
 	void Open(UObject* InAsset);
 
 	TSharedRef<SDockTab> Spawn_ViewportTab(const FSpawnTabArgs& InArgs);
+	TSharedRef<SDockTab> Spawn_PreviewTab(const FSpawnTabArgs& InArgs);
+	TSharedRef<SDockTab> Spawn_DetailsTab(const FSpawnTabArgs& InArgs);
 
 private:
 	static TSharedPtr<FMeshViewer> Instance;
 
 private:
 	TSharedPtr<class SMeshViewer_Viewport> Viewport;
+	TSharedPtr<class SWidget> PreviewSceneSettings;
+	TSharedPtr<class IDetailsView> DetailsView;
 };
